@@ -6,15 +6,17 @@ const { tokenTypes } = require('../config/tokens');
 
 /**
  * Generate token
- * @param {ObjectId} userId
+ * @param {User} user
  * @param {Moment} expires
  * @param {string} type
  * @param {string} [secret]
  * @returns {string}
  */
-const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
+const generateToken = (user, expires, type, secret = config.jwt.secret) => {
   const payload = {
-    sub: userId,
+    role: user.role,
+    username: user.username,
+    sub: user.id,
     iat: moment().unix(),
     exp: expires.unix(),
     type,
@@ -64,10 +66,10 @@ const verifyToken = async (token, type) => {
  */
 const generateAuthTokens = async (user) => {
   const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
-  const accessToken = generateToken(user.id, accessTokenExpires, tokenTypes.ACCESS);
+  const accessToken = generateToken(user, accessTokenExpires, tokenTypes.ACCESS);
 
   const refreshTokenExpires = moment().add(config.jwt.refreshExpirationDays, 'days');
-  const refreshToken = generateToken(user.id, refreshTokenExpires, tokenTypes.REFRESH);
+  const refreshToken = generateToken(user, refreshTokenExpires, tokenTypes.REFRESH);
   await saveToken(refreshToken, user.id, refreshTokenExpires, tokenTypes.REFRESH);
 
   return {
@@ -82,9 +84,27 @@ const generateAuthTokens = async (user) => {
   };
 };
 
+/**
+ * Get all existing tokens for user
+ * @param {User} user
+ * @param {Token} [skipToken]
+ * @return {Promise<Array<Token>>}
+ */
+const getAllTokens = async (user, skipToken) => {
+  const tokens = await Token.find({
+    user,
+    token: { $ne: skipToken },
+    type: tokenTypes.REFRESH,
+    blacklisted: false,
+  });
+
+  return tokens;
+};
+
 module.exports = {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
+  getAllTokens,
 };

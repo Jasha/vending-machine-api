@@ -10,8 +10,18 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getProducts = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['productName']);
+  let filter = pick(req.query, ['productName']);
+  if (req.user.role === 'seller') {
+    filter = { ...filter, seller: req.user };
+  } else {
+    filter = { ...filter, amountAvailable: { $gt: 0 } };
+  }
+
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  if (!options.sortBy) {
+    options.sortBy = '-createdAt';
+  }
+
   const result = await productService.queryProducts(filter, options);
   res.send(result);
 });

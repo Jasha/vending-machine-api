@@ -5,8 +5,9 @@ const { authService, tokenService } = require('../services');
 const login = catchAsync(async (req, res) => {
   const { username, password } = req.body;
   const user = await authService.loginUserWithUsernameAndPassword(username, password);
+  const activeTokens = await tokenService.getAllTokens(user);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  res.send({ user, tokens, activeTokens: activeTokens.length });
 });
 
 const logout = catchAsync(async (req, res) => {

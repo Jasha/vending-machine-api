@@ -5,19 +5,18 @@ components:
       properties:
         id:
           type: string
-        email:
+        username:
           type: string
-          format: email
-        name:
-          type: string
+        deposit:
+          type: number
         role:
           type: string
-          enum: [user, admin]
+          enum: [buyer, seller]
       example:
         id: 5ebac534954b54139806c112
-        email: fake@example.com
-        name: fake name
-        role: user
+        username: username
+        deposit: 0
+        role: buyer
 
     Token:
       type: object
@@ -39,6 +38,23 @@ components:
         refresh:
           $ref: '#/components/schemas/Token'
 
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        availableAmount:
+          type: number
+        cost:
+          type: number
+        productName:
+          type: string
+      example:
+        id: 5ebac534954b54139806c112
+        availableAmount: 0
+        cost: 10
+        productName: Product one
+
     Error:
       type: object
       properties:
@@ -48,15 +64,24 @@ components:
           type: string
 
   responses:
-    DuplicateEmail:
-      description: Email already taken
+    DuplicateUsername:
+      description: Username already taken
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
           example:
             code: 400
-            message: Email already taken
+            message: Username already taken
+    DuplicateProductName:
+      description: Product name already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Product name already taken
     Unauthorized:
       description: Unauthorized
       content:

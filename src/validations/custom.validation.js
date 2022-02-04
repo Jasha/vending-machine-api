@@ -24,8 +24,16 @@ const deposit = (value, helpers) => {
   return value;
 };
 
+const cost = (value, helpers) => {
+  if (value % DENOMINATIONS[0] !== 0) {
+    return helpers.message(`cost should be rounded to ${DENOMINATIONS[0]}`);
+  }
+  return value;
+};
+
 module.exports = {
   objectId,
   password,
   deposit,
+  cost,
 };

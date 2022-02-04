@@ -43,12 +43,7 @@ const logoutAll = async (refreshToken) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
   }
 
-  const tokens = await Token.find({
-    user: refreshTokenDoc.user,
-    token: { $ne: refreshToken },
-    type: tokenTypes.REFRESH,
-    blacklisted: false,
-  });
+  const tokens = await tokenService.getAllTokens(refreshTokenDoc.user, refreshToken);
   await tokens.forEach((token) => token.remove());
 };
 

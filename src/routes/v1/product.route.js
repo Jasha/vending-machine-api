@@ -256,16 +256,24 @@ module.exports = router;
  *                 type: string
  *                 description: Product id
  *             example:
- *               amountAvailable: 20
- *               cost: 200
- *               productName: New product name
+ *               amount: 2
+ *               productId: 12345asdfe
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Product'
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: number
+ *                   example: 100
+ *                 product:
+ *                   $ref: '#/components/schemas/Product'
+ *                 change:
+ *                   type: array
+ *                   example: [0, 0, 0, 0, 1]
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

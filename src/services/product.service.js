@@ -59,8 +59,8 @@ const updateProductById = async (user, productId, updateBody) => {
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
-  if (product.seller !== user) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden')
+  if (String(product.seller) !== user.id) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
   }
   if (product.productName && (await Product.isProductNameTaken(updateBody.productName, productId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Product name already taken');
@@ -81,8 +81,8 @@ const deleteProductById = async (user, productId) => {
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
-  if (product.seller !== user) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden')
+  if (String(product.seller) !== user.id) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
   }
   await product.remove();
   return product;

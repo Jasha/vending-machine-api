@@ -63,8 +63,7 @@ module.exports = router;
  *                  type: string
  *                  enum: [buyer, seller]
  *             example:
- *               name: fake name
- *               email: fake@example.com
+ *               username: username
  *               password: password1
  *               role: buyer
  *     responses:
@@ -197,11 +196,8 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               username:
  *                 type: string
- *               email:
- *                 type: string
- *                 format: email
  *                 description: must be unique
  *               password:
  *                 type: string
@@ -209,8 +205,7 @@ module.exports = router;
  *                 minLength: 4
  *                 description: At least one number and one letter
  *             example:
- *               name: fake name
- *               email: fake@example.com
+ *               username: username
  *               password: password1
  *     responses:
  *       "200":
@@ -220,7 +215,7 @@ module.exports = router;
  *             schema:
  *                $ref: '#/components/schemas/User'
  *       "400":
- *         $ref: '#/components/responses/DuplicateEmail'
+ *         $ref: '#/components/responses/DuplicateUsername'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
